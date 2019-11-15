@@ -83,55 +83,55 @@ class Cpu:
 
         while running:
             IR = self.ram_read(self.pc)
-            operand_a = self.ram_read(self.pc+1)
-            operand_b = self.ram_read(self.pc+2)
+            operand_a = int(f'{self.ram_read(self.pc+1)}', 2)
+            operand_b = int(f'{self.ram_read(self.pc+2)}', 2)
             op_code = int(f"0b{IR}", 2)
 
             if op_code == LDI:
-                self.reg[int(f'{operand_a}', 2)] = int(f'{operand_b}', 2)
+                self.reg[operand_a] = operand_b
 
                 shift = op_code
-                incr = shift >> 6
-                self.pc += (incr + 1)
+                shift_right = shift >> 6
+                self.pc += (shift_right + 1)
 
             elif op_code == CMP:
-                if self.reg[int(f"{operand_a}", 2)] < self.reg[int(f"{operand_b}", 2)]:
+                if self.reg[operand_a] < self.reg[operand_b]:
                     self.fl[5] = 1
-                elif self.reg[int(f"{operand_a}", 2)] > self.reg[int(f"{operand_b}", 2)]:
+                elif self.reg[operand_a] > self.reg[operand_b]:
                     self.fl[6] = 1
-                elif self.reg[int(f"{operand_a}", 2)] == self.reg[int(f"{operand_b}", 2)]:
+                elif self.reg[operand_a] == self.reg[operand_b]:
                     self.fl[7] = 1
 
                 shift = op_code
-                incr = shift >> 6
-                self.pc += (incr + 1)
+                shift_right = shift >> 6
+                self.pc += (shift_right + 1)
 
             elif op_code == JEQ:
                 if self.fl[7] == 1:
-                    self.pc = self.reg[int(f'{operand_a}', 2)]
+                    self.pc = self.reg[operand_a]
 
                 else:
                     shift = op_code
-                    incr = shift >> 6
-                    self.pc += (incr + 1)
+                    shift_right = shift >> 6
+                    self.pc += (shift_right + 1)
 
             elif op_code == PRN:
-                print(self.reg[int(f"{operand_a}", 2)])
+                print(self.reg[operand_a])
 
                 shift = op_code
-                incr = shift >> 6
-                self.pc += (incr + 1)
+                shift_right = shift >> 6
+                self.pc += (shift_right + 1)
 
             elif op_code == JNE:
                 if self.fl[7] == 0:
-                    self.pc = self.reg[int(f'{operand_a}', 2)]
+                    self.pc = self.reg[operand_a]
                 else:
                     shift = op_code
-                    incr = shift >> 6
-                    self.pc += (incr + 1)
+                    shift_right = shift >> 6
+                    self.pc += (shift_right + 1)
 
             elif op_code == JMP:
-                self.pc = self.reg[int(f'{operand_a}', 2)]
+                self.pc = self.reg[operand_a]
 
             elif op_code == HLT:
                 sys.exit(1)
